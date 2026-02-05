@@ -1,0 +1,13 @@
+{
+  "name": "cineadois",
+  "version": "1.0.0",
+  "description": "App de recomendação e busca de cinema para casais",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

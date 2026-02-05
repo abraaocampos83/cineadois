@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineAdois - Match Perfeito</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        header { text-align: center; padding: 20px; }
+        .logo-small { max-width: 130px; }
+        .main-content { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
+        .setup-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; margin-bottom: 20px; width: 100%; box-sizing: border-box; }
+        h2 { color: #f1c40f; font-size: 1.3rem; margin-top: 0; margin-bottom: 5px; text-align: center; }
+        .obs-discreta { font-size: 0.8rem; color: #888; margin-bottom: 15px; display: block; font-style: italic; text-align: center; }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: center; width: 100%; }
+        .btn-mode { flex: 1; min-width: 140px; padding: 12px; border: 1px solid #444; background: #262626; color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; box-sizing: border-box; }
+        .btn-genre { padding: 8px 15px; border: 1px solid #444; background: #262626; color: #fff; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: 0.3s; }
+        .btn-mode.active, .btn-genre.selected { border-color: #f1c40f; color: #f1c40f; background: #2c2c2c; }
+        #container-generos { display: none; background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333; width: 100%; box-sizing: border-box; }
+        textarea { width: 100%; padding: 12px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none; font-family: inherit; box-sizing: border-box; resize: none; }
+        button#btn-buscar { width: 100%; padding: 15px; background-color: #f1c40f; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer; font-size: 1rem; transition: 0.3s; margin-top: 10px; }
+        #loading-msg, #loading-more { display: none; color: #f1c40f; text-align: center; margin: 20px 0; font-style: italic; font-size: 0.9rem; }
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(241, 196, 15, 0.3); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s ease-in-out infinite; margin-bottom: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .card-sugestao { background: #2c2c2c; padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #444; border-left: 6px solid #f1c40f; width: 100%; box-sizing: border-box; }
+        .filme-titulo { font-size: 1.25rem; font-weight: bold; color: #f1c40f; display: block; margin-bottom: 5px; }
+        .notas-container { display: flex; justify-content: space-around; background: #1a1a1a; padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #333; }
+        .nota-item { text-align: center; font-size: 0.8rem; }
+        .sinopse-texto { display: none; font-size: 0.9rem; line-height: 1.4; color: #ecf0f1; background: #333; padding: 12px; border-radius: 6px; margin: 10px 0; }
+        .btn-sinopse { background: transparent; border: 1px dashed #555; color: #aaa; padding: 8px; margin: 10px 0; font-size: 0.85rem; width: 100%; cursor: pointer; }
+        .btn-streaming { display: block; background: #fff; color: #000; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.85rem; text-align: center; margin-top: 15px; }
+        .back-link { display: block; text-align: center; margin-top: 25px; color: #bdc3c7; text-decoration: none; }
+        footer { padding: 20px; color: #555; font-size: 0.8rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html"><img src="logo.png" alt="CineAdois" class="logo-small"></a>
+    </header>
+
+    <main class="main-content">
+        <section class="setup-box" id="form-match">
+            <h2>Qual a vibe de hoje? 🤔</h2>
+            <span class="obs-discreta">Aqui é opcional tá!</span>
+            <button class="btn-mode" id="btn-explorar" onclick="toggleGeneros()" style="width:100%; margin-bottom:20px;">Explorar estilos 🎭</button>
+            <div id="container-generos">
+                <div class="btn-group" id="lista-generos">
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Ação</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Comédia</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Drama</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Terror</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Suspense</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Romance</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Ficção Científica</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Animação</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Aventura</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Fantasia</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Musical</button>
+                    <button class="btn-genre" onclick="toggleGenreTag(this)">Mistério</button>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
+
+            <h2>Queremos algo mais específico! 😌</h2>
+            <span class="obs-discreta">Aqui é opcional tá!</span>
+            <div class="btn-group">
+                <button class="btn-mode" id="btn-sintonia" onclick="mudarModo('sintonia', this)">Em sintonia 🤝</button>
+                <button class="btn-mode" id="btn-cada-um" onclick="mudarModo('cada-um', this)">Cada um na sua 🥊</button>
+            </div>
+
+            <div id="modo-sintonia" style="display:none;">
+                <textarea id="expectativa-unica" placeholder="Descrevam o filme que vocês querem ver juntos..." rows="3"></textarea>
+            </div>
+
+            <div id="modo-cada-um" style="display:none;">
+                <textarea id="quero-p1" placeholder="Pessoa 1: O que você quer ver?" rows="2"></textarea>
+                <textarea id="quero-p2" placeholder="Pessoa 2: O que você quer ver?" rows="2"></textarea>
+            </div>
+
+            <button id="btn-buscar" onclick="encontrarMatch()">Gerar nosso Match 🍿</button>
+            <span class="obs-discreta" style="margin-top: 12px; margin-bottom: 0;">Basta preencher um dos campos acima (ou todos!) para a gente encontrar o seu play. ✨</span>
+            
+            <div id="loading-msg">
+                <div class="spinner"></div><br>
+                Consultando o Oráculo do Cinema... ✨
+            </div>
+        </section>
+
+        <section id="resultado-match" style="display:none; width: 100%;">
+            <h2 style="text-align: center;">Demos Match! 🍿</h2>
+            <div id="lista-sugestoes"></div>
+            
+            <div id="loading-more">
+                <div class="spinner"></div><br>
+                Buscando raridades no catálogo... 📚
+            </div>
+
+            <button id="btn-mais" onclick="encontrarMatch(true)" style="margin-top: 20px; background: #f1c40f; border: none; color: #000; font-weight:bold; width:100%; padding:15px; border-radius:8px; cursor:pointer;">O que mais tem no catálogo? 📚</button>
+            
+            <button onclick="location.reload()" style="margin-top: 10px; background: transparent; border: 1px solid #555; color: #888; width:100%; padding:12px; border-radius:8px; cursor:pointer;">Nova Busca</button>
+        </section>
+
+        <a href="index.html" class="back-link">← Voltar para o início</a>
+    </main>
+
+    <footer>&copy; 2026 CineAdois</footer>
+
+    <script src="api/match.js"></script>
+    <script>
+        let modoAtual = '';
+        let generosSelecionados = [];
+        let filmesJaMostrados = []; // Memória da sessão
+
+        function toggleGeneros() {
+            const container = document.getElementById('container-generos');
+            const btn = document.getElementById('btn-explorar');
+            container.style.display = container.style.display === 'block' ? 'none' : 'block';
+            btn.classList.toggle('active');
+        }
+
+        function toggleGenreTag(btn) {
+            btn.classList.toggle('selected');
+            const g = btn.innerText;
+            if(btn.classList.contains('selected')) generosSelecionados.push(g);
+            else generosSelecionados = generosSelecionados.filter(item => item !== g);
+        }
+
+        function mudarModo(modo, btn) {
+            if (modoAtual === modo) { modoAtual = ''; btn.classList.remove('active'); }
+            else {
+                modoAtual = modo;
+                document.getElementById('btn-sintonia').classList.remove('active');
+                document.getElementById('btn-cada-um').classList.remove('active');
+                btn.classList.add('active');
+            }
+            document.getElementById('modo-sintonia').style.display = modoAtual === 'sintonia' ? 'block' : 'none';
+            document.getElementById('modo-cada-um').style.display = modoAtual === 'cada-um' ? 'block' : 'none';
+        }
+
+        async function encontrarMatch(acumular = false) {
+            const genStr = generosSelecionados.join(", ");
+            let expectativa = "";
+            if (modoAtual === 'sintonia') expectativa = document.getElementById('expectativa-unica').value;
+            else if (modoAtual === 'cada-um') expectativa = `P1: ${document.getElementById('quero-p1').value}. P2: ${document.getElementById('quero-p2').value}`;
+
+            if(generosSelecionados.length === 0 && !expectativa) return alert("Escolha um gênero ou escreva o que buscam!");
+
+            const loader = acumular ? document.getElementById('loading-more') : document.getElementById('loading-msg');
+            const btnMais = document.getElementById('btn-mais');
+            
+            loader.style.display = 'block';
+            if(acumular) btnMais.style.display = 'none';
+
+            try {
+                // Passamos os filmes atuais para a IA não repetir
+                const novosFilmes = await MatchIA.gerarSugestoes(genStr, expectativa, filmesJaMostrados);
+                
+                loader.style.display = 'none';
+                document.getElementById('form-match').style.display = 'none';
+                document.getElementById('resultado-match').style.display = 'block';
+                if(acumular) btnMais.style.display = 'block';
+
+                const lista = document.getElementById('lista-sugestoes');
+                
+                novosFilmes.forEach((f) => {
+                    filmesJaMostrados.push(f.titulo_pt); // Salva na memória
+                    const cardIndex = filmesJaMostrados.length;
+                    const div = document.createElement('div');
+                    div.className = 'card-sugestao';
+                    div.innerHTML = `
+                        <span class="filme-titulo">${f.titulo_pt}</span>
+                        <span style="display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 8px;">${f.ano}</span>
+                        <span style="display: block; margin-bottom: 10px;">"${f.motivo}"</span>
+                        <div class="notas-container">
+                            <div class="nota-item"><span>IMDb</span><br><strong>⭐ ${f.notas.imdb}</strong></div>
+                            <div class="nota-item"><span>Rotten</span><br><strong>🍅 ${f.notas.rotten}</strong></div>
+                        </div>
+                        <button class="btn-sinopse" onclick="toggleSinopse(${cardIndex})">Sobre o que é? 🤔</button>
+                        <div id="sinopse-${cardIndex}" class="sinopse-texto">${f.sinopse}</div>
+                        <a href="${f.link_streaming}" target="_blank" class="btn-streaming">Onde dar o play? ▶️</a>
+                    `;
+                    lista.appendChild(div);
+                });
+
+                if(acumular) window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+            } catch (e) { 
+                alert("Erro ao buscar."); 
+                loader.style.display = 'none';
+                if(acumular) btnMais.style.display = 'block';
+            }
+        }
+
+        function toggleSinopse(index) {
+            const s = document.getElementById(`sinopse-${index}`);
+            s.style.display = s.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

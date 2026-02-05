@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineAdois - Review Real</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        header { text-align: center; padding: 20px; }
+        .logo-small { max-width: 130px; }
+        .main-content { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
+        .setup-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; margin-bottom: 20px; text-align: center; }
+        h2 { color: #f1c40f; font-size: 1.5rem; margin: 0 0 5px 0; }
+        .subtitulo { font-size: 0.9rem; color: #888; margin-bottom: 20px; display: block; }
+        input { width: 100%; padding: 14px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none; box-sizing: border-box; font-size: 1rem; }
+        button#btn-analisar { width: 100%; padding: 15px; background-color: #f1c40f; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        
+        /* SPINNER DOURADO */
+        #load-review { display: none; color: #f1c40f; text-align: center; margin-top: 20px; font-style: italic; }
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(241, 196, 15, 0.3); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s ease-in-out infinite; margin-bottom: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .card-review { background: #2c2c2c; padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #444; border-top: 4px solid #f1c40f; }
+        .filme-header { border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px; text-align: left; }
+        .filme-titulo { font-size: 1.4rem; font-weight: bold; color: #f1c40f; }
+        .filme-info { color: #888; font-size: 0.85rem; display: block; margin-top: 4px; }
+        .notas-container { display: flex; justify-content: space-around; background: #1a1a1a; padding: 12px; border-radius: 8px; margin: 15px 0; }
+        .nota-item { text-align: center; }
+        .nota-label { font-size: 0.7rem; color: #aaa; display: block; }
+        .nota-valor { color: #f1c40f; font-weight: bold; font-size: 1.1rem; }
+        .consenso-box { background: #262626; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 15px; text-align: left; }
+        .consenso-titulo { font-size: 0.75rem; font-weight: bold; color: #3498db; display: block; }
+        .btn-sinopse { background: transparent; border: 1px dashed #555; color: #aaa; padding: 10px; margin-bottom: 15px; width: 100%; cursor: pointer; border-radius: 6px; }
+        .sinopse-texto { display: none; font-size: 0.9rem; color: #bdc3c7; background: #1a1a1a; padding: 12px; border-radius: 6px; margin-bottom: 15px; text-align: left; }
+        .btn-verificar { display: block; background: #fff; color: #000; padding: 14px; border-radius: 6px; text-decoration: none; font-weight: bold; text-align: center; }
+        .back-link { display: block; text-align: center; margin-top: 25px; color: #bdc3c7; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header><a href="index.html"><img src="logo.png" alt="CineAdois" class="logo-small"></a></header>
+    <main class="main-content">
+        <section class="setup-box" id="box-busca">
+            <h2>A Real sobre o Filme 🍿</h2>
+            <span class="subtitulo">Descubra se esse filme vale o seu tempo.</span>
+            <input type="text" id="filmeNome" placeholder="Qual filme vocês têm em mente?">
+            <button id="btn-analisar" onclick="iniciarBusca()">Vale o Play? 🤔</button>
+            <div id="load-review"><div class="spinner"></div><br>Consultando o Oráculo... ✨</div>
+        </section>
+        <section id="resultado-review" style="display:none; width: 100%;">
+            <div class="card-review" id="conteudo-review"></div>
+            <button onclick="location.reload()" style="margin-top: 20px; background: transparent; border: 1px solid #f1c40f; color: #f1c40f; width: 100%; padding: 15px; border-radius: 8px; cursor: pointer;">Nova Análise</button>
+        </section>
+        <a href="index.html" class="back-link">← Voltar para o início</a>
+    </main>
+    <script src="api/review.js"></script>
+    <script>
+        async function iniciarBusca() {
+            const nome = document.getElementById('filmeNome').value;
+            if(!nome) return alert("Digite o nome do filme!");
+            
+            const load = document.getElementById('load-review');
+            const btn = document.getElementById('btn-analisar');
+            const resBox = document.getElementById('resultado-review');
+            const conteudo = document.getElementById('conteudo-review');
+
+            load.style.display = 'block';
+            btn.style.display = 'none';
+
+            try {
+                const r = await ReviewIA.buscarReview(nome);
+                load.style.display = 'none';
+                document.getElementById('box-busca').style.display = 'none';
+                resBox.style.display = 'block';
+
+                conteudo.innerHTML = `
+                    <div class="filme-header">
+                        <span class="filme-titulo">${r.titulo}</span>
+                        <span class="filme-info">${r.ano} • Dirigido por ${r.diretor}</span>
+                    </div>
+                    <div class="notas-container">
+                        <div class="nota-item"><span class="nota-label">IMDb</span><span class="nota-valor">⭐ ${r.notas.imdb}</span></div>
+                        <div class="nota-item"><span class="nota-label">Rotten</span><span class="nota-valor">🍅 ${r.notas.rotten}</span></div>
+                        <div class="nota-item"><span class="nota-label">Metacritic</span><span class="nota-valor">📊 ${r.notas.meta}</span></div>
+                    </div>
+                    <div class="consenso-box">
+                        <span class="consenso-titulo">O QUE DIZEM OS CRÍTICOS:</span>
+                        <p class="consenso-texto">"${r.consenso}"</p>
+                    </div>
+                    <button class="btn-sinopse" onclick="toggleSinopse()">Tá, mas sobre o que é? 🤔</button>
+                    <div id="sinopse-review" class="sinopse-texto">${r.sinopse}</div>
+                    <a href="${r.link_critica}" target="_blank" class="btn-verificar">LER CRÍTICA COMPLETA</a>
+                `;
+            } catch (e) {
+                alert("Erro ao analisar filme. Tente novamente.");
+                load.style.display = 'none';
+                btn.style.display = 'block';
+            }
+        }
+        function toggleSinopse() {
+            const s = document.getElementById('sinopse-review');
+            s.style.display = s.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

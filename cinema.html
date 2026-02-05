@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineAdois - Partiu Telão!</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        header { text-align: center; padding: 20px; }
+        .logo-small { max-width: 130px; }
+        .main-content { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
+        .setup-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; margin-bottom: 20px; text-align: center; }
+        h2 { color: #f1c40f; font-size: 1.3rem; margin-top: 0; margin-bottom: 15px; }
+        
+        select { width: 100%; padding: 14px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none; cursor: pointer; }
+
+        .cidade-selecionada { font-size: 1.5rem; font-weight: bold; color: #fff; margin-bottom: 20px; display: block; }
+        
+        .btn-principal { width: 100%; padding: 15px; background-color: #f1c40f; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer; font-size: 1rem; margin-bottom: 10px; transition: 0.3s; }
+        .btn-principal:hover { background-color: #d4ac0d; }
+        
+        .btn-trocar { background: transparent; border: 1px dashed #555; color: #888; padding: 10px; width: 100%; cursor: pointer; border-radius: 8px; font-size: 0.85rem; }
+        
+        .loading { display: none; text-align: center; margin: 20px 0; color: #f1c40f; }
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(241, 196, 15, 0.3); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s ease-in-out infinite; margin-bottom: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .list-container { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+        .item-clicavel { background: #262626; padding: 15px; border-radius: 8px; border-left: 4px solid #f1c40f; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
+        .item-clicavel:hover { background: #333; transform: translateX(5px); }
+        .back-link { display: block; text-align: center; margin-top: 25px; color: #bdc3c7; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header><a href="index.html"><img src="logo.png" alt="CineAdois" class="logo-small"></a></header>
+    <main class="main-content">
+        <section class="setup-box">
+            <h2>Onde vocês estão?</h2>
+            <select id="estado" onchange="selecionarEstado()">
+                <option value="">Selecione o Estado</option>
+                <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option><option value="BA">Bahia</option><option value="CE">Ceará</option><option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option><option value="GO">Goiás</option><option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option><option value="MG">Minas Gerais</option><option value="PA">Pará</option><option value="PB">Paraíba</option><option value="PR">Paraná</option><option value="PE">Pernambuco</option><option value="PI">Piauí</option><option value="RJ">Rio de Janeiro</option><option value="RN">Rio Grande do Norte</option><option value="RS">Rio Grande do Sul</option><option value="RO">Rondônia</option><option value="RR">Roraima</option><option value="SC">Santa Catarina</option><option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
+            </select>
+
+            <div id="area-capital" style="display:none;">
+                <span class="cidade-selecionada" id="nome-cidade-atual">Cidade</span>
+                <button class="btn-principal" onclick="buscarCinemas(document.getElementById('nome-cidade-atual').innerText)">Procurar Cinema 🍿</button>
+                <button class="btn-trocar" onclick="trocarCidade()">Não estou na capital 📍</button>
+            </div>
+
+            <div id="load-geral" class="loading"><div class="spinner"></div><br><span id="msg-load">Consultando...</span></div>
+            
+            <div id="container-resultados" class="list-container"></div>
+        </section>
+
+        <a href="index.html" class="back-link">← Voltar para o início</a>
+    </main>
+
+    <script src="api/cinema.js"></script>
+    <script>
+        let estadoGlobal = '';
+
+        function selecionarEstado() {
+            estadoGlobal = document.getElementById('estado').value;
+            const areaCapital = document.getElementById('area-capital');
+            const nomeCidade = document.getElementById('nome-cidade-atual');
+            const resultados = document.getElementById('container-resultados');
+
+            if (!estadoGlobal) {
+                areaCapital.style.display = 'none';
+                return;
+            }
+
+            resultados.innerHTML = '';
+            nomeCidade.innerText = CinemaIA.capitais[estadoGlobal];
+            areaCapital.style.display = 'block';
+        }
+
+        async function trocarCidade() {
+            const load = document.getElementById('load-geral');
+            const resultados = document.getElementById('container-resultados');
+            const capital = CinemaIA.capitais[estadoGlobal];
+            
+            document.getElementById('area-capital').style.display = 'none';
+            document.getElementById('msg-load').innerText = "Buscando outras cidades...";
+            load.style.display = 'block';
+            resultados.innerHTML = '';
+
+            try {
+                const cidades = await CinemaIA.buscarOutrasCidades(estadoGlobal, capital);
+                load.style.display = 'none';
+                
+                cidades.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'item-clicavel';
+                    div.innerHTML = `<span>${c}</span><span style="color:#f1c40f">→</span>`;
+                    div.onclick = () => {
+                        document.getElementById('nome-cidade-atual').innerText = c;
+                        document.getElementById('area-capital').style.display = 'block';
+                        resultados.innerHTML = '';
+                    };
+                    resultados.appendChild(div);
+                });
+            } catch (e) { load.style.display = 'none'; }
+        }
+
+        async function buscarCinemas(cidade) {
+            const load = document.getElementById('load-geral');
+            const resultados = document.getElementById('container-resultados');
+            
+            document.getElementById('msg-load').innerText = "Localizando cinemas...";
+            load.style.display = 'block';
+            resultados.innerHTML = '';
+
+            try {
+                const cinemas = await CinemaIA.buscarCinemasLocal(cidade, estadoGlobal);
+                load.style.display = 'none';
+
+                if (!cinemas || cinemas.length === 0) {
+                    resultados.innerHTML = "<p>Nenhum cinema encontrado.</p>";
+                    return;
+                }
+
+                cinemas.forEach(nome => {
+                    const div = document.createElement('div');
+                    div.className = 'item-clicavel';
+                    div.innerHTML = `<span>${nome}</span><span style="color:#f1c40f">Ver Horários</span>`;
+                    const q = encodeURIComponent(`programação cinema ${nome} ${cidade} ${estadoGlobal}`);
+                    div.onclick = () => window.open(`https://www.google.com/search?q=${q}`, '_blank');
+                    resultados.appendChild(div);
+                });
+            } catch (e) { load.style.display = 'none'; }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineAdois - Onde as preferências se encontram!</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f1c40f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CineAdois">
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* --- Estilos da Tela de Bloqueio --- */
+        #bloqueio-senha {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #121212;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+
+        /* Classe especial para deixar o ícone redondo APENAS na tela de senha */
+        .logo-senha {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            border-radius: 50%; /* Transforma o quadrado em círculo */
+            border: 2px solid #f1c40f; /* Borda dourada para acabamento */
+            object-fit: cover; /* Garante que a imagem preencha o círculo */
+            background-color: white; /* Garante fundo branco se a imagem for transparente */
+        }
+
+        #bloqueio-senha h2 {
+            color: white; 
+            font-family: sans-serif; 
+            margin-bottom: 20px;
+        }
+
+        #bloqueio-senha input {
+            padding: 15px; font-size: 18px; border-radius: 8px;
+            border: 2px solid #f1c40f; background: #1e1e1e;
+            color: white; text-align: center; margin-bottom: 15px;
+            width: 200px;
+            outline: none;
+        }
+
+        #bloqueio-senha button {
+            padding: 12px 30px; 
+            background: #f1c40f;
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold;
+            color: #121212; 
+            cursor: pointer; 
+            font-size: 16px;
+            transition: transform 0.2s;
+            /* Ajuste de largura para harmonia visual */
+            width: auto;
+            min-width: 150px;
+        }
+        
+        #bloqueio-senha button:active {
+            transform: scale(0.95);
+        }
+
+        /* Oculta o site até a senha ser digitada */
+        body { visibility: hidden; background-color: #121212; }
+
+        /* --- Estilos da Home Grid --- */
+        .home-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            width: 280px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            margin: 15px;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: #f1c40f;
+            box-shadow: 0 10px 20px rgba(241, 196, 15, 0.2);
+        }
+        .icon { font-size: 40px; margin-bottom: 15px; display: block; }
+        
+        /* Ajuste do Header */
+        header { text-align: center; margin-top: 20px; }
+        .logo-img { max-width: 80%; height: auto; }
+    </style>
+</head>
+<body>
+
+    <div id="bloqueio-senha">
+        <img src="icon.png" class="logo-senha" alt="CineAdois Bloqueado">
+        <h2>Acesso Restrito</h2>
+        <input type="password" id="input-senha" placeholder="Digite a senha" inputmode="numeric">
+        <button onclick="verificarSenha()">Entrar</button>
+        <p id="erro-senha" style="color: #e74c3c; display: none; margin-top: 15px; font-family: sans-serif;">Senha incorreta!</p>
+    </div>
+
+    <header>
+        <img src="logo.png" alt="CineAdois" class="logo-img">
+        <p style="color: #ccc; margin-top: 10px;">“Onde as preferências se encontram!”</p>
+    </header>
+
+    <main class="home-grid">
+        <a href="match.html" class="card">
+            <span class="icon">🍿</span>
+            <h2>Match de Pipoca!</h2>
+            <p>Deixa que a gente escolhe o filme perfeito para o casal.</p>
+        </a>
+
+        <a href="review.html" class="card">
+            <span class="icon">⭐</span>
+            <h2>Review Real!</h2>
+            <p>Tudo o que você precisa saber antes de dar o play.</p>
+        </a>
+
+        <a href="cinema.html" class="card">
+            <span class="icon">🎬</span>
+            <h2>Partiu Telão!</h2>
+            <p>O que está rolando nos cinemas perto de vocês.</p>
+        </a>
+    </main>
+
+    <footer style="text-align: center; padding: 40px 20px; color: #666; font-size: 0.9em;">
+        <p>&copy; 2026 CineAdois - Criado para facilitar o seu momento cinema.</p>
+        <p style="margin-top: 15px;">
+            <a href="sobre.html" style="color: #f1c40f; text-decoration: none;">Sobre o Projeto</a>
+        </p>
+    </footer>
+
+    <script>
+        // --- Lógica de Segurança ---
+        const SENHA_CORRETA = "1005";
+
+        function verificarSenha() {
+            const senhaDigitada = document.getElementById('input-senha').value;
+            if (senhaDigitada === SENHA_CORRETA) {
+                localStorage.setItem('acesso-cineadois', 'true');
+                liberarAcesso();
+            } else {
+                document.getElementById('erro-senha').style.display = 'block';
+                const input = document.getElementById('input-senha');
+                input.style.borderColor = '#e74c3c';
+                setTimeout(() => input.style.borderColor = '#f1c40f', 500);
+            }
+        }
+
+        function liberarAcesso() {
+            const bloqueio = document.getElementById('bloqueio-senha');
+            bloqueio.style.opacity = '0';
+            bloqueio.style.transition = 'opacity 0.5s';
+            setTimeout(() => {
+                bloqueio.style.display = 'none';
+            }, 500);
+            document.body.style.visibility = 'visible';
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('acesso-cineadois') === 'true') {
+                document.getElementById('bloqueio-senha').style.display = 'none';
+                document.body.style.visibility = 'visible';
+            } else {
+                document.body.style.visibility = 'visible'; 
+            }
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registrado!', reg))
+                .catch(err => console.log('Erro ao registrar Service Worker:', err));
+            }
+        };
+    </script>
+
+</body>
+</html>
