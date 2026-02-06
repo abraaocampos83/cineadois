@@ -1,17 +1,12 @@
 {
   "name": "cineadois",
   "version": "1.0.0",
-  "description": "App de recomendação e busca de cinema para casais",
   "type": "module",
-  "main": "index.html",
   "scripts": {
     "start": "serve .",
-    "build": "npm install"
+    "build": "echo 'Done'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@vercel/kv": "^1.0.1"
+    "serve": "^14.2.4"
   }
 }
