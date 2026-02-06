@@ -3,55 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineAdois - Review Real</title>
+    <title>CineAdois - Vale o Play?</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f1c40f">
+
     <style>
-        body { background-color: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { text-align: center; padding: 20px; }
-        .logo-small { max-width: 130px; }
-        .main-content { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
-        .setup-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; margin-bottom: 20px; text-align: center; }
-        h2 { color: #f1c40f; font-size: 1.5rem; margin: 0 0 5px 0; }
-        .subtitulo { font-size: 0.9rem; color: #888; margin-bottom: 20px; display: block; }
-        input { width: 100%; padding: 14px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none; box-sizing: border-box; font-size: 1rem; }
-        button#btn-analisar { width: 100%; padding: 15px; background-color: #f1c40f; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer; font-size: 1rem; }
-        
-        /* SPINNER DOURADO */
+        /* --- Padronização CineAdois --- */
+        body { 
+            background-color: #121212; 
+            color: #fff; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+
+        header { text-align: center; padding: 30px 20px; }
+        .logo-small { max-width: 180px; transition: transform 0.3s ease; }
+
+        .main-content { width: 100%; max-width: 600px; padding: 0 20px 40px; box-sizing: border-box; }
+
+        /* --- Textos de Introdução --- */
+        .page-title { color: #f1c40f; text-transform: uppercase; letter-spacing: 2px; font-size: 1.8rem; text-align: center; margin-bottom: 10px; }
+        .page-intro { text-align: center; color: #ccc; font-size: 1rem; line-height: 1.6; margin-bottom: 30px; padding: 0 10px; }
+        .page-intro b { color: #f1c40f; }
+
+        /* --- Box de Busca --- */
+        .setup-box { 
+            background: linear-gradient(180deg, rgba(241,196,15,0.05) 0%, rgba(30,30,30,1) 100%);
+            border: 1px solid rgba(241,196,15,0.2);
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+        }
+
+        input { 
+            width: 100%; padding: 18px; background-color: rgba(255,255,255,0.05); 
+            border: 1px solid #444; border-radius: 50px; color: #fff; 
+            margin-bottom: 20px; outline: none; box-sizing: border-box; 
+            font-size: 1rem; text-align: center; transition: 0.3s;
+        }
+        input:focus { border-color: #f1c40f; background-color: rgba(255,255,255,0.1); }
+
+        /* --- Botão Atualizado: Consultar o Oráculo --- */
+        button#btn-analisar { 
+            width: 100%; padding: 18px; background-color: #f1c40f; border: none; 
+            border-radius: 50px; color: #121212; font-weight: 900; cursor: pointer; 
+            font-size: 1.1rem; text-transform: uppercase; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+        button#btn-analisar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4); }
+
+        /* --- Loading --- */
         #load-review { display: none; color: #f1c40f; text-align: center; margin-top: 20px; font-style: italic; }
-        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(241, 196, 15, 0.3); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s ease-in-out infinite; margin-bottom: 10px; }
+        .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid rgba(241, 196, 15, 0.1); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .card-review { background: #2c2c2c; padding: 20px; border-radius: 12px; margin-top: 15px; border: 1px solid #444; border-top: 4px solid #f1c40f; }
-        .filme-header { border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px; text-align: left; }
-        .filme-titulo { font-size: 1.4rem; font-weight: bold; color: #f1c40f; }
-        .filme-info { color: #888; font-size: 0.85rem; display: block; margin-top: 4px; }
-        .notas-container { display: flex; justify-content: space-around; background: #1a1a1a; padding: 12px; border-radius: 8px; margin: 15px 0; }
+
+        /* --- Card de Review --- */
+        .card-review { 
+            background: linear-gradient(145deg, #1e1e1e, #252525); padding: 30px; 
+            border-radius: 24px; margin-top: 15px; border: 1px solid rgba(241,196,15,0.2); 
+            border-top: 6px solid #f1c40f; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .filme-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px; text-align: center; }
+        .filme-titulo { font-size: 1.6rem; font-weight: 800; color: #f1c40f; display: block; }
+        .filme-info { color: #888; font-size: 0.9rem; display: block; margin-top: 6px; }
+
+        .notas-container { 
+            display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); 
+            padding: 15px; border-radius: 15px; margin: 20px 0; border: 1px solid #333; 
+        }
         .nota-item { text-align: center; }
-        .nota-label { font-size: 0.7rem; color: #aaa; display: block; }
-        .nota-valor { color: #f1c40f; font-weight: bold; font-size: 1.1rem; }
-        .consenso-box { background: #262626; padding: 15px; border-radius: 8px; border-left: 4px solid #3498db; margin-bottom: 15px; text-align: left; }
-        .consenso-titulo { font-size: 0.75rem; font-weight: bold; color: #3498db; display: block; }
-        .btn-sinopse { background: transparent; border: 1px dashed #555; color: #aaa; padding: 10px; margin-bottom: 15px; width: 100%; cursor: pointer; border-radius: 6px; }
-        .sinopse-texto { display: none; font-size: 0.9rem; color: #bdc3c7; background: #1a1a1a; padding: 12px; border-radius: 6px; margin-bottom: 15px; text-align: left; }
-        .btn-verificar { display: block; background: #fff; color: #000; padding: 14px; border-radius: 6px; text-decoration: none; font-weight: bold; text-align: center; }
-        .back-link { display: block; text-align: center; margin-top: 25px; color: #bdc3c7; text-decoration: none; }
+        .nota-label { font-size: 0.75rem; color: #aaa; display: block; text-transform: uppercase; }
+        .nota-valor { color: #f1c40f; font-weight: 800; font-size: 1.2rem; margin-top: 4px; display: block; }
+
+        .consenso-box { 
+            background: rgba(52, 152, 219, 0.05); padding: 20px; border-radius: 15px; 
+            border-left: 4px solid #3498db; margin-bottom: 20px; text-align: left; 
+        }
+        .consenso-titulo { font-size: 0.75rem; font-weight: 900; color: #3498db; display: block; margin-bottom: 10px; letter-spacing: 1px; }
+        .consenso-texto { margin: 0; font-size: 1rem; line-height: 1.6; color: #eee; font-style: italic; }
+
+        .btn-sinopse { background: transparent; border: 1px dashed #555; color: #888; padding: 12px; margin-bottom: 15px; width: 100%; cursor: pointer; border-radius: 10px; transition: 0.3s; }
+        .btn-sinopse:hover { border-color: #f1c40f; color: #f1c40f; }
+
+        .sinopse-texto { display: none; font-size: 0.95rem; line-height: 1.6; color: #ccc; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left; border-left: 3px solid #f1c40f; }
+
+        .btn-verificar { 
+            display: block; background: #fff; color: #121212; padding: 18px; 
+            border-radius: 50px; text-decoration: none; font-weight: 900; 
+            text-align: center; transition: 0.3s; letter-spacing: 1px;
+        }
+        .btn-verificar:hover { background: #f1c40f; transform: scale(1.02); }
+
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #666; text-decoration: none; font-weight: 500; }
+        .back-link:hover { color: #f1c40f; }
     </style>
 </head>
 <body>
     <header><a href="index.html"><img src="logo.png" alt="CineAdois" class="logo-small"></a></header>
+    
     <main class="main-content">
+        <h1 class="page-title">VALE O PLAY? 🤔</h1>
+        <p class="page-intro">
+            <b>A real sobre o filme, sem enrolação.</b><br>
+            Já tem um filme em mente, mas está com medo de ser cilada? 
+            Joga o nome dele aqui embaixo e nossa IA te dá o veredito. Nota, resumo e se ele realmente combina com o que vocês buscam hoje! 🎬✨
+        </p>
+
         <section class="setup-box" id="box-busca">
-            <h2>A Real sobre o Filme 🍿</h2>
-            <span class="subtitulo">Descubra se esse filme vale o seu tempo.</span>
             <input type="text" id="filmeNome" placeholder="Qual filme vocês têm em mente?">
-            <button id="btn-analisar" onclick="iniciarBusca()">Vale o Play? 🤔</button>
-            <div id="load-review"><div class="spinner"></div><br>Consultando o Oráculo... ✨</div>
+            <button id="btn-analisar" onclick="iniciarBusca()">Consultar o Oráculo 🔮</button>
+            <div id="load-review">
+                <div class="spinner"></div><br>
+                Consultando o Oráculo... ✨
+            </div>
         </section>
+
         <section id="resultado-review" style="display:none; width: 100%;">
             <div class="card-review" id="conteudo-review"></div>
-            <button onclick="location.reload()" style="margin-top: 20px; background: transparent; border: 1px solid #f1c40f; color: #f1c40f; width: 100%; padding: 15px; border-radius: 8px; cursor: pointer;">Nova Análise</button>
+            <button onclick="location.reload()" style="margin-top: 20px; background: transparent; border: 1px solid #444; color: #888; width: 100%; padding: 15px; border-radius: 50px; cursor: pointer; text-transform: uppercase; font-weight: bold;">Fazer outra análise</button>
         </section>
+
         <a href="index.html" class="back-link">← Voltar para o início</a>
     </main>
+
     <script src="api/review.js"></script>
     <script>
         async function iniciarBusca() {
@@ -83,12 +164,12 @@
                         <div class="nota-item"><span class="nota-label">Metacritic</span><span class="nota-valor">📊 ${r.notas.meta}</span></div>
                     </div>
                     <div class="consenso-box">
-                        <span class="consenso-titulo">O QUE DIZEM OS CRÍTICOS:</span>
+                        <span class="consenso-titulo">VEREDITO DO ORÁCULO:</span>
                         <p class="consenso-texto">"${r.consenso}"</p>
                     </div>
                     <button class="btn-sinopse" onclick="toggleSinopse()">Tá, mas sobre o que é? 🤔</button>
                     <div id="sinopse-review" class="sinopse-texto">${r.sinopse}</div>
-                    <a href="${r.link_critica}" target="_blank" class="btn-verificar">LER CRÍTICA COMPLETA</a>
+                    <a href="${r.link_critica}" target="_blank" class="btn-verificar">VER CRÍTICA COMPLETA</a>
                 `;
             } catch (e) {
                 alert("Erro ao analisar filme. Tente novamente.");
