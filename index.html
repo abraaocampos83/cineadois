@@ -42,7 +42,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 40px; /* Aumentado para dar espaço ao balão embaixo */
+            gap: 40px; 
             max-width: 1100px;
             margin: 20px auto;
             padding: 0 20px;
@@ -55,7 +55,7 @@
             max-width: 320px;
             display: flex;
             flex-direction: column;
-            margin-bottom: 60px; /* Espaço para o balão não atropelar o de baixo */
+            margin-bottom: 60px; 
         }
 
         .card {
@@ -95,7 +95,7 @@
             text-align: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
             z-index: 10;
-            top: 105%; /* Posiciona sempre ABAIXO do card */
+            top: 105%; 
         }
 
         /* --- COMPORTAMENTO DESKTOP --- */
@@ -108,7 +108,7 @@
             .card-wrapper:hover::after {
                 opacity: 1;
                 visibility: visible;
-                top: 110%; /* Pequeno deslocamento ao flutuar */
+                top: 110%; 
             }
             .card:hover {
                 transform: translateY(-5px);
@@ -121,15 +121,15 @@
             .card-wrapper::after {
                 opacity: 1;
                 visibility: visible;
-                position: relative; /* No mobile ele vira um bloco estático */
-                top: 15px; /* Margem do card de cima */
+                position: relative; 
+                top: 15px; 
                 transform: none;
                 left: 0;
                 width: 100%;
                 box-sizing: border-box;
             }
             .card-wrapper {
-                margin-bottom: 30px; /* Espaçamento entre os blocos no celular */
+                margin-bottom: 30px; 
             }
         }
 
@@ -156,6 +156,7 @@
 
         footer { text-align: center; padding: 60px 20px 40px; color: #666; font-size: 0.9em; width: 100%; }
         footer a { color: #f1c40f; text-decoration: none; font-weight: 500; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -247,4 +248,3 @@
     </script>
 </body>
 </html>
-
