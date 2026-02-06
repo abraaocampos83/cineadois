@@ -25,28 +25,24 @@
         .logo-img { max-width: 280px; height: auto; }
         .slogan-original { color: #ccc; margin-top: 10px; font-size: 1.1rem; font-style: italic; margin-bottom: 20px; }
 
-        /* --- Texto de Introdução Ajustado --- */
         .intro-text {
             color: #f1c40f;
-            line-height: 1.8; /* Aumentado levemente para melhor leitura */
-            font-size: 1.2rem; /* Aumentado conforme solicitado */
+            line-height: 1.8;
+            font-size: 1.2rem;
             margin-bottom: 40px;
             text-align: center;
             font-weight: 400;
             max-width: 800px;
         }
 
-        .intro-text b {
-            font-weight: 700;
-            font-size: 1.3rem; /* Destaque maior para a frase em negrito */
-        }
+        .intro-text b { font-weight: 700; font-size: 1.3rem; }
 
-        /* --- Layout de Cards Principal --- */
+        /* --- Layout de Cards --- */
         .home-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
+            gap: 40px; /* Aumentado para dar espaço ao balão embaixo */
             max-width: 1100px;
             margin: 20px auto;
             padding: 0 20px;
@@ -57,6 +53,9 @@
             flex: 1;
             min-width: 280px;
             max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 60px; /* Espaço para o balão não atropelar o de baixo */
         }
 
         .card {
@@ -71,52 +70,74 @@
             text-align: center;
             text-decoration: none;
             color: inherit;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s ease;
             box-sizing: border-box;
-        }
-
-        /* Tooltip suave */
-        .card-wrapper::after {
-            content: attr(data-info);
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #f1c40f;
-            color: #121212;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            width: 90%;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 10;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .card-wrapper:hover::after {
-            opacity: 1;
-            visibility: visible;
-            bottom: 10px;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: #f1c40f;
+            z-index: 2;
         }
 
         .icon { font-size: 50px; margin-bottom: 20px; }
         .card h2 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
         .card p { color: #bbb; font-size: 0.95rem; margin: 0; }
 
+        /* Estilo Base do Balão (Tooltips) */
+        .card-wrapper::after {
+            content: attr(data-info);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f1c40f;
+            color: #121212;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            z-index: 10;
+            top: 105%; /* Posiciona sempre ABAIXO do card */
+        }
+
+        /* --- COMPORTAMENTO DESKTOP --- */
+        @media (min-width: 769px) {
+            .card-wrapper::after {
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            .card-wrapper:hover::after {
+                opacity: 1;
+                visibility: visible;
+                top: 110%; /* Pequeno deslocamento ao flutuar */
+            }
+            .card:hover {
+                transform: translateY(-5px);
+                border-color: #f1c40f;
+            }
+        }
+
+        /* --- COMPORTAMENTO MOBILE / PWA --- */
+        @media (max-width: 768px) {
+            .card-wrapper::after {
+                opacity: 1;
+                visibility: visible;
+                position: relative; /* No mobile ele vira um bloco estático */
+                top: 15px; /* Margem do card de cima */
+                transform: none;
+                left: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .card-wrapper {
+                margin-bottom: 30px; /* Espaçamento entre os blocos no celular */
+            }
+        }
+
         /* --- Mural --- */
         .recent-matches {
             width: 90%;
             max-width: 800px;
-            margin: 80px auto 40px;
+            margin: 40px auto;
             padding: 30px 20px;
             background: linear-gradient(180deg, rgba(241,196,15,0.1) 0%, rgba(18,18,18,0) 100%);
             border-radius: 20px;
@@ -144,10 +165,10 @@
         <p class="slogan-original">“Onde as preferências se encontram!”</p>
         
         <div class="intro-text">
-            <b> 🍿Você se preocupa com a pipoca e do filme a gente cuida!🎬 </b><br>
+            <b>Você se preocupa com a pipoca, que do filme a gente cuida!</b><br>
             Combinamos os desejos de vocês para achar o filme ideal...<br>
             Ou podemos avaliar se aquela ideia de última hora realmente vale o play...<br>
-            ❤️ Menos briga pelo controle, mais sintonia no sofá! 💙
+            🎬 Menos briga pelo controle, mais sintonia no sofá! 🤝
         </div>
     </header>
 
