@@ -11,49 +11,63 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icon.png">
 
-    <link rel="stylesheet" href="style.css">
-    
-    <script>
-        if (localStorage.getItem('acesso-cineadois') !== 'true') {
-            window.location.href = 'index.html';
-        }
-    </script>
-
     <style>
-        /* Estilos específicos desta página */
+        /* --- Padronização com o Novo Layout --- */
+        body { 
+            background-color: #121212; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            color: white; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .sobre-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
             color: #e0e0e0;
-            line-height: 1.6;
+            line-height: 1.8;
         }
         
         .sobre-header {
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 20px;
+            margin-bottom: 50px;
         }
 
         .sobre-header h1 {
             color: #f1c40f;
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sobre-header p {
+            color: #ccc;
+            font-style: italic;
+            font-size: 1.1rem;
         }
 
         .section-block {
-            margin-bottom: 40px;
-            background: #1e1e1e;
-            padding: 25px;
-            border-radius: 15px;
-            border-left: 4px solid #f1c40f;
+            margin-bottom: 30px;
+            background: linear-gradient(180deg, rgba(241,196,15,0.05) 0%, rgba(30,30,30,1) 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(241,196,15,0.2);
+            transition: border-color 0.3s ease;
+        }
+
+        .section-block:hover {
+            border-color: #f1c40f;
         }
 
         .section-block h2 {
-            color: #fff;
+            color: #f1c40f;
             margin-top: 0;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
         }
 
         .highlight {
@@ -61,23 +75,41 @@
             font-weight: bold;
         }
 
+        /* --- Botão Voltar Estilizado --- */
         .btn-voltar {
             display: block;
             width: fit-content;
             margin: 40px auto;
-            padding: 12px 30px;
+            padding: 15px 40px;
             background-color: transparent;
             border: 2px solid #f1c40f;
             color: #f1c40f;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 50px;
             font-weight: bold;
-            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
 
         .btn-voltar:hover {
             background-color: #f1c40f;
             color: #121212;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+        }
+
+        ul li {
+            margin-bottom: 15px;
+            padding-left: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-bottom: 40px;
+            color: #666;
+            font-size: 0.9em;
         }
     </style>
 </head>
@@ -86,7 +118,7 @@
     <div class="sobre-container">
         
         <header class="sobre-header">
-            <img src="icon.png" width="80" style="margin-bottom: 10px;">
+            <img src="logo.png" alt="CineAdois" style="max-width: 200px; height: auto; margin-bottom: 20px;">
             <h1>Nossa Missão</h1>
             <p>Salvar sua noite de cinema (e o seu relacionamento).</p>
         </header>
@@ -94,7 +126,7 @@
         <section class="section-block">
             <h2>O Fim do "Tanto Faz"</h2>
             <p>Sabe aquele momento em que a pizza chega, esfria, e vocês continuam rodando o catálogo do streaming sem conseguir decidir o que assistir? Nós conhecemos bem.</p>
-            <p>O <strong>CineAdois</strong> nasceu para resolver o paradoxo da escolha. Acreditamos que o tempo que vocês gastam escolhendo deveria ser gasto assistindo.</p>
+            <p>O <strong class="highlight">CineAdois</strong> nasceu para resolver o paradoxo da escolha. Acreditamos que o tempo que vocês gastam escolhendo deveria ser gasto assistindo.</p>
         </section>
 
         <section class="section-block">
@@ -107,17 +139,17 @@
         <section class="section-block">
             <h2>Os 3 Pilares da Experiência</h2>
             <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 15px;">🍿 <strong>Match Inteligente:</strong> Onde os gostos opostos se encontram em harmonia.</li>
-                <li style="margin-bottom: 15px;">⭐ <strong>Review Real:</strong> Sem spoilers, apenas o que você precisa saber para não cair em cilada.</li>
+                <li>🍿 <strong>Match Inteligente:</strong> Onde os gostos opostos se encontram em harmonia.</li>
+                <li>⭐ <strong>Review Real:</strong> Sem spoilers, apenas o que você precisa saber para não cair em cilada.</li>
                 <li>🎬 <strong>Cinema Local:</strong> Porque às vezes a magia acontece na tela grande.</li>
             </ul>
         </section>
 
-        <footer style="text-align: center; margin-top: 50px; font-size: 0.9em; color: #666;">
-            <p>&copy; 2026 CineAdois. Todos os direitos reservados.</p>
-        </footer>
-
         <a href="index.html" class="btn-voltar">← Voltar para o Início</a>
+
+        <footer>
+            <p>&copy; 2026 CineAdois. Criado para facilitar o seu momento cinema.</p>
+        </footer>
 
     </div>
 
