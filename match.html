@@ -79,7 +79,6 @@
             </div>
 
             <button id="btn-buscar" onclick="encontrarMatch()">Gerar nosso Match 🍿</button>
-            <span class="obs-discreta" style="margin-top: 12px; margin-bottom: 0;">Basta preencher um dos campos acima para a gente encontrar o seu play. ✨</span>
             
             <div id="loading-msg">
                 <div class="spinner"></div><br>
@@ -106,6 +105,7 @@
     <footer>&copy; 2026 CineAdois</footer>
 
     <script src="api/match.js"></script>
+
     <script>
         let modoAtual = '';
         let generosSelecionados = [];
@@ -137,36 +137,39 @@
             document.getElementById('modo-cada-um').style.display = modoAtual === 'cada-um' ? 'block' : 'none';
         }
 
-        // --- FUNÇÃO DE SALVAMENTO NO MURAL ---
-        async function salvarMatchNoGlobal(buscaTexto, filmesEncontrados) {
+        // --- FUNÇÃO QUE ENVIA PARA O BANCO DE DADOS ---
+        async function salvarNoMural(textoBusca, listaFilmes) {
             try {
-                await fetch('/api/historico', {
+                await fetch('./api/historico', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        busca: buscaTexto,
-                        filmes: filmesEncontrados.slice(0, 3) // Salva os 3 principais
+                        busca: textoBusca,
+                        filmes: listaFilmes.slice(0, 3) // Enviamos apenas os 3 primeiros nomes
                     })
                 });
-                console.log("Match sincronizado com o mural global!");
-            } catch (e) { console.error("Erro ao salvar no global", e); }
+                console.log("Enviado para o mural!");
+            } catch (err) {
+                console.error("Erro ao salvar mural:", err);
+            }
         }
 
         async function encontrarMatch(acumular = false) {
             const genStr = generosSelecionados.join(", ");
             let expectativa = "";
-            let resumoBusca = "";
+            let resumoParaMural = "";
 
+            // Define o que será escrito no Mural Global
             if (modoAtual === 'sintonia') {
                 expectativa = document.getElementById('expectativa-unica').value;
-                resumoBusca = expectativa || genStr;
+                resumoParaMural = expectativa || genStr;
             } else if (modoAtual === 'cada-um') {
                 const p1 = document.getElementById('quero-p1').value;
                 const p2 = document.getElementById('quero-p2').value;
                 expectativa = `P1: ${p1}. P2: ${p2}`;
-                resumoBusca = (p1 && p2) ? `${p1} + ${p2}` : (p1 || p2 || genStr);
+                resumoParaMural = (p1 && p2) ? `${p1} + ${p2}` : (p1 || p2 || genStr);
             } else {
-                resumoBusca = genStr || "Clima surpresa";
+                resumoParaMural = genStr || "Clima surpresa";
             }
 
             if(generosSelecionados.length === 0 && !expectativa) return alert("Escolha um gênero ou escreva o que buscam!");
@@ -178,12 +181,14 @@
             if(acumular) btnMais.style.display = 'none';
 
             try {
-                // Aqui chama a sua lógica do api/match.js
+                // Chama a lógica do seu arquivo api/match.js
                 const novosFilmes = await MatchIA.gerarSugestoes(genStr, expectativa, filmesJaMostrados);
                 
-                // GRAVAÇÃO NO MURAL: Só grava na primeira busca (não no 'ver mais')
+                // --- GRAVAÇÃO NO REDIS ---
+                // Só gravamos no mural se for a primeira busca (não no 'ver mais')
                 if (!acumular && novosFilmes && novosFilmes.length > 0) {
-                    await salvarMatchNoGlobal(resumoBusca, novosFilmes.map(f => f.titulo_pt));
+                    const nomesFilmes = novosFilmes.map(f => f.titulo_pt);
+                    await salvarNoMural(resumoParaMural, nomesFilmes);
                 }
 
                 loader.style.display = 'none';
@@ -211,9 +216,12 @@
                     `;
                     lista.appendChild(div);
                 });
+                
                 if(acumular) window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
             } catch (e) { 
-                alert("Erro ao buscar."); 
+                console.error(e);
+                alert("Erro ao buscar sugestões."); 
                 loader.style.display = 'none';
                 if(acumular) btnMais.style.display = 'block';
             }
