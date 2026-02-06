@@ -13,139 +13,30 @@
     <link rel="apple-touch-icon" href="icon.png">
 
     <style>
-        /* --- Configurações Gerais --- */
-        body { 
-            background-color: #121212; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            color: white; 
-            overflow-x: hidden;
-        }
-
+        body { background-color: #121212; font-family: 'Segoe UI', sans-serif; margin: 0; color: white; overflow-x: hidden; }
         header { text-align: center; padding: 40px 20px 20px; }
         .logo-img { max-width: 280px; height: auto; }
-        
         .slogan-original { color: #ccc; margin-top: 10px; font-size: 1rem; }
-        
-        .intro-container { margin-top: 25px; line-height: 1.6; color: #f1c40f; font-weight: 500; }
-        .intro-container p { margin: 0; font-size: 1.1rem; }
-        .intro-break { display: block; margin-top: 5px; }
-
-        /* --- Layout de Cards --- */
-        .home-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .card-wrapper {
-            position: relative;
-            flex: 1;
-            min-width: 280px;
-            max-width: 320px;
-        }
-
-        .card {
-            background: linear-gradient(145deg, #1e1e1e, #161616);
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 35px 25px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-sizing: border-box;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: #f1c40f;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-        }
-
+        .intro-container { margin-top: 25px; line-height: 1.6; color: #f1c40f; font-weight: 500; text-align: center; }
+        .home-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .card-wrapper { position: relative; flex: 1; min-width: 280px; max-width: 320px; }
+        .card { background: linear-gradient(145deg, #1e1e1e, #161616); border: 1px solid #333; border-radius: 20px; padding: 35px 25px; height: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; color: inherit; transition: all 0.4s; box-sizing: border-box; }
+        .card:hover { transform: translateY(-10px); border-color: #f1c40f; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
         .icon { font-size: 50px; margin-bottom: 20px; }
         .card h2 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
         .card p { color: #999; font-size: 0.95rem; margin: 0; }
 
-        /* --- Seção de Últimos Matches (Slide Global) --- */
-        .recent-matches {
-            max-width: 800px;
-            margin: 60px auto;
-            padding: 30px 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 20px;
-            border: 1px solid #333;
-            text-align: center;
-        }
-
-        .recent-matches h3 {
-            color: #f1c40f;
-            font-size: 1.1rem;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        #match-slider {
-            position: relative;
-            height: 140px;
-            overflow: hidden;
-        }
-
-        .slide-item {
-            position: absolute;
-            width: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
+        /* Slide Mural */
+        .recent-matches { max-width: 800px; margin: 60px auto; padding: 30px 20px; background: rgba(255, 255, 255, 0.02); border-radius: 20px; border: 1px solid #333; text-align: center; }
+        .recent-matches h3 { color: #f1c40f; font-size: 1.1rem; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+        #match-slider { position: relative; min-height: 140px; overflow: hidden; }
+        .slide-item { position: absolute; width: 100%; top: 0; left: 0; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .slide-item.active { opacity: 1; position: relative; }
-
-        .search-criteria {
-            font-style: italic;
-            color: #f1c40f;
-            margin-bottom: 15px;
-            font-size: 1rem;
-            max-width: 80%;
-        }
-
-        .found-movies {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .movie-tag {
-            background: #262626;
-            color: #fff;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            border: 1px solid #444;
-        }
-
-        /* --- Footer --- */
+        .search-criteria { font-style: italic; color: #f1c40f; margin-bottom: 15px; font-size: 1rem; max-width: 80%; }
+        .found-movies { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .movie-tag { background: #262626; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; border: 1px solid #444; }
         footer { text-align: center; padding: 60px 20px 40px; color: #666; font-size: 0.9em; }
-
-        @media (max-width: 768px) {
-            #match-slider { height: auto; min-height: 180px; }
-            .search-criteria { font-size: 0.9rem; }
-        }
+        @media (max-width: 768px) { #match-slider { min-height: 180px; } }
     </style>
 </head>
 <body>
@@ -153,10 +44,9 @@
     <header>
         <img src="logo.png" alt="CineAdois" class="logo-img">
         <p class="slogan-original">“Onde as preferências se encontram!”</p>
-        
         <div class="intro-container">
             <p>Cansados de perder horas escolhendo um filme?</p>
-            <p class="intro-break">O CineAdois utiliza IA para cruzar o que vocês amam e encontrar a opção perfeita.</p>
+            <p>O CineAdois utiliza IA para cruzar o que vocês amam e encontrar a opção perfeita.</p>
         </div>
     </header>
 
@@ -168,7 +58,6 @@
                 <p>O encontro dos gostos.</p>
             </a>
         </div>
-
         <div class="card-wrapper">
             <a href="review.html" class="card">
                 <span class="icon">⭐</span>
@@ -176,7 +65,6 @@
                 <p>Opinião sem filtros.</p>
             </a>
         </div>
-
         <div class="card-wrapper">
             <a href="cinema.html" class="card">
                 <span class="icon">🎬</span>
@@ -188,15 +76,12 @@
 
     <section class="recent-matches" id="recent-section" style="display: none;">
         <h3>Os últimos matches que encontramos 🍿</h3>
-        <div id="match-slider">
-            </div>
+        <div id="match-slider"></div>
     </section>
 
     <footer>
         <p>&copy; 2026 CineAdois - Criado para facilitar o seu momento cinema.</p>
-        <p style="margin-top: 15px;">
-            <a href="sobre.html" style="color: #f1c40f; text-decoration: none;">Sobre o Projeto</a>
-        </p>
+        <p><a href="sobre.html" style="color: #f1c40f; text-decoration: none;">Sobre o Projeto</a></p>
     </footer>
 
     <script>
@@ -209,7 +94,6 @@
                 if (!response.ok) return;
                 
                 const matches = await response.json();
-
                 if (!matches || matches.length === 0) return;
 
                 section.style.display = 'block';
@@ -229,7 +113,6 @@
 
                 let currentSlide = 0;
                 const slides = document.querySelectorAll('.slide-item');
-                
                 if (slides.length > 1) {
                     setInterval(() => {
                         slides[currentSlide].classList.remove('active');
@@ -237,9 +120,7 @@
                         slides[currentSlide].classList.add('active');
                     }, 5000);
                 }
-            } catch (e) {
-                console.error("Erro ao carrerar slide global:", e);
-            }
+            } catch (e) { console.error("Erro no slide:", e); }
         }
 
         window.onload = () => {
@@ -249,6 +130,5 @@
             }
         };
     </script>
-
 </body>
 </html>
