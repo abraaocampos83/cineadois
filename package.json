@@ -2,10 +2,11 @@
   "name": "cineadois",
   "version": "1.0.0",
   "description": "App de recomendação e busca de cinema para casais",
+  "type": "module",
   "main": "index.html",
   "scripts": {
     "start": "serve .",
-    "build": "echo 'No build step required'"
+    "build": "npm install"
   },
   "keywords": [],
   "author": "",
