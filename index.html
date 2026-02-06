@@ -12,43 +12,15 @@
     <meta name="apple-mobile-web-app-title" content="CineAdois">
     <link rel="apple-touch-icon" href="icon.png">
 
-    <link rel="stylesheet" href="style.css">
-    
     <style>
-        /* --- Estilos da Tela de Bloqueio --- */
-        #bloqueio-senha {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #121212;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 9999;
-        }
-
-        .logo-senha {
-            width: 120px; height: 120px; margin-bottom: 20px;
-            border-radius: 50%; border: 2px solid #f1c40f;
-            object-fit: cover; background-color: white;
-        }
-
-        #bloqueio-senha h2 { color: white; font-family: sans-serif; margin-bottom: 20px; }
-
-        #bloqueio-senha input {
-            padding: 15px; font-size: 18px; border-radius: 8px;
-            border: 2px solid #f1c40f; background: #1e1e1e;
-            color: white; text-align: center; margin-bottom: 15px;
-            width: 200px; outline: none;
-        }
-
-        #bloqueio-senha button {
-            padding: 12px 30px; background: #f1c40f;
-            border: none; border-radius: 8px; font-weight: bold;
-            color: #121212; cursor: pointer; font-size: 16px;
-            transition: transform 0.2s; min-width: 150px;
-        }
-
         /* --- Configurações Gerais --- */
-        body { visibility: hidden; background-color: #121212; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: white; }
+        body { 
+            background-color: #121212; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            color: white; 
+            overflow-x: hidden;
+        }
 
         header { text-align: center; padding: 40px 20px 20px; }
         .logo-img { max-width: 280px; height: auto; }
@@ -59,7 +31,7 @@
         .intro-container p { margin: 0; font-size: 1.1rem; }
         .intro-break { display: block; margin-top: 5px; }
 
-        /* --- Layout Criativo de Cards --- */
+        /* --- Layout de Cards --- */
         .home-grid {
             display: flex;
             flex-wrap: wrap;
@@ -103,61 +75,80 @@
         .card h2 { color: #f1c40f; margin: 0 0 10px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; }
         .card p { color: #999; font-size: 0.95rem; margin: 0; }
 
-        /* --- Tooltip Estilizada (PC) --- */
-        .info-box {
-            position: absolute;
-            bottom: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(241, 196, 15, 0.95);
-            color: #121212;
-            padding: 12px 18px;
-            border-radius: 12px;
-            width: 220px;
-            font-size: 0.85rem;
-            font-weight: 600;
+        /* --- Seção de Últimos Matches (Slide Global) --- */
+        .recent-matches {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid #333;
             text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 10;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .info-box::before {
-            content: "";
+        .recent-matches h3 {
+            color: #f1c40f;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #match-slider {
+            position: relative;
+            height: 140px;
+            overflow: hidden;
+        }
+
+        .slide-item {
             position: absolute;
-            bottom: 100%;
-            left: 50%;
-            margin-left: -8px;
-            border-width: 8px;
-            border-style: solid;
-            border-color: transparent transparent rgba(241, 196, 15, 0.95) transparent;
+            width: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        @media (min-width: 1024px) {
-            .card-wrapper:hover .info-box {
-                opacity: 1;
-                visibility: visible;
-                bottom: -95px;
-            }
+        .slide-item.active { opacity: 1; position: relative; }
+
+        .search-criteria {
+            font-style: italic;
+            color: #f1c40f;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            max-width: 80%;
         }
 
-        @media (max-width: 1023px) {
-            .info-box { display: none; }
-            .home-grid { gap: 20px; }
+        .found-movies {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .movie-tag {
+            background: #262626;
+            color: #fff;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid #444;
+        }
+
+        /* --- Footer --- */
+        footer { text-align: center; padding: 60px 20px 40px; color: #666; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            #match-slider { height: auto; min-height: 180px; }
+            .search-criteria { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
-
-    <div id="bloqueio-senha">
-        <img src="icon.png" class="logo-senha" alt="CineAdois Bloqueado">
-        <h2>Acesso Restrito</h2>
-        <input type="password" id="input-senha" placeholder="Digite a senha" inputmode="numeric">
-        <button onclick="verificarSenha()">Entrar</button>
-        <p id="erro-senha" style="color: #e74c3c; display: none; margin-top: 15px; font-family: sans-serif;">Senha incorreta!</p>
-    </div>
 
     <header>
         <img src="logo.png" alt="CineAdois" class="logo-img">
@@ -165,7 +156,7 @@
         
         <div class="intro-container">
             <p>Cansados de perder horas escolhendo um filme?</p>
-            <p class="intro-break">O CineAdois utiliza IA para cruzar o que vocês amam e encontrar a opção perfeita para o seu momento, seja no sofá ou no cinema.</p>
+            <p class="intro-break">O CineAdois utiliza IA para cruzar o que vocês amam e encontrar a opção perfeita.</p>
         </div>
     </header>
 
@@ -176,9 +167,6 @@
                 <h2>Match de Pipoca!</h2>
                 <p>O encontro dos gostos.</p>
             </a>
-            <div class="info-box">
-                Nossa IA analisa o gosto dos dois e sugere o filme que é o equilíbrio perfeito para vocês.
-            </div>
         </div>
 
         <div class="card-wrapper">
@@ -187,9 +175,6 @@
                 <h2>Review Real!</h2>
                 <p>Opinião sem filtros.</p>
             </a>
-            <div class="info-box">
-                O filme é bom? Vale a pena? A gente te conta.
-            </div>
         </div>
 
         <div class="card-wrapper">
@@ -198,13 +183,16 @@
                 <h2>Partiu Telão!</h2>
                 <p>Cinema na sua cidade.</p>
             </a>
-            <div class="info-box">
-                Querem sair de casa? Veja os cinemas e os filmes que estão em cartaz na sua cidade.
-            </div>
         </div>
     </main>
 
-    <footer style="text-align: center; padding: 60px 20px 40px; color: #666; font-size: 0.9em;">
+    <section class="recent-matches" id="recent-section" style="display: none;">
+        <h3>Os últimos matches que encontramos 🍿</h3>
+        <div id="match-slider">
+            </div>
+    </section>
+
+    <footer>
         <p>&copy; 2026 CineAdois - Criado para facilitar o seu momento cinema.</p>
         <p style="margin-top: 15px;">
             <a href="sobre.html" style="color: #f1c40f; text-decoration: none;">Sobre o Projeto</a>
@@ -212,43 +200,52 @@
     </footer>
 
     <script>
-        const SENHA_CORRETA = "1005";
+        async function initSlider() {
+            const slider = document.getElementById('match-slider');
+            const section = document.getElementById('recent-section');
 
-        function verificarSenha() {
-            const senhaDigitada = document.getElementById('input-senha').value;
-            if (senhaDigitada === SENHA_CORRETA) {
-                localStorage.setItem('acesso-cineadois', 'true');
-                liberarAcesso();
-            } else {
-                document.getElementById('erro-senha').style.display = 'block';
-                const input = document.getElementById('input-senha');
-                input.style.borderColor = '#e74c3c';
-                setTimeout(() => input.style.borderColor = '#f1c40f', 500);
+            try {
+                const response = await fetch('/api/historico');
+                if (!response.ok) return;
+                
+                const matches = await response.json();
+
+                if (!matches || matches.length === 0) return;
+
+                section.style.display = 'block';
+                slider.innerHTML = '';
+
+                matches.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = `slide-item ${index === 0 ? 'active' : ''}`;
+                    const moviesHtml = item.filmes.map(f => `<span class="movie-tag">${f}</span>`).join('');
+
+                    div.innerHTML = `
+                        <div class="search-criteria">"Para quem buscou: ${item.busca}"</div>
+                        <div class="found-movies">${moviesHtml}</div>
+                    `;
+                    slider.appendChild(div);
+                });
+
+                let currentSlide = 0;
+                const slides = document.querySelectorAll('.slide-item');
+                
+                if (slides.length > 1) {
+                    setInterval(() => {
+                        slides[currentSlide].classList.remove('active');
+                        currentSlide = (currentSlide + 1) % slides.length;
+                        slides[currentSlide].classList.add('active');
+                    }, 5000);
+                }
+            } catch (e) {
+                console.error("Erro ao carrerar slide global:", e);
             }
-        }
-
-        function liberarAcesso() {
-            const bloqueio = document.getElementById('bloqueio-senha');
-            bloqueio.style.opacity = '0';
-            bloqueio.style.transition = 'opacity 0.5s';
-            setTimeout(() => {
-                bloqueio.style.display = 'none';
-            }, 500);
-            document.body.style.visibility = 'visible';
         }
 
         window.onload = () => {
-            if (localStorage.getItem('acesso-cineadois') === 'true') {
-                document.getElementById('bloqueio-senha').style.display = 'none';
-                document.body.style.visibility = 'visible';
-            } else {
-                document.body.style.visibility = 'visible'; 
-            }
-
+            initSlider();
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registrado!', reg))
-                .catch(err => console.log('Erro ao registrar Service Worker:', err));
+                navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
             }
         };
     </script>
