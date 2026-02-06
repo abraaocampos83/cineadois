@@ -1,54 +1,62 @@
-import { createClient } from '@vercel/kv';
-
 export default async function handler(req, res) {
-    // Configuração de CORS para o seu domínio
+    // Configurações de CORS para evitar bloqueios do navegador
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+    // Responde a pré-requisições do navegador
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // Conectamos usando a variável que a Vercel criou automaticamente
-    const client = createClient({
-        url: process.env.REDIS_URL,
-    });
+    // Credenciais extraídas da sua REDIS_URL para conexão via REST
+    const REDIS_REST_URL = "https://redis-11971.crce196.sa-east-1-2.ec2.cloud.redislabs.com:11971";
+    const REDIS_REST_TOKEN = "427LEOBdvxBMLllMeoN9ioRvnFfwY351";
 
     try {
+        // --- MÉTODO POST: GRAVAR NOVO MATCH ---
         if (req.method === 'POST') {
             const novoMatch = req.body;
-            
-            // Busca dados existentes
-            let data = await client.get('global_matches');
-            let historico = [];
 
-            if (data) {
-                historico = typeof data === 'string' ? JSON.parse(data) : data;
+            // 1. Buscar histórico atual via Fetch (Nativo do Node.js)
+            const responseGet = await fetch(`${REDIS_REST_URL}/get/global_matches`, {
+                headers: { Authorization: `Bearer ${REDIS_REST_TOKEN}` }
+            });
+            const dataGet = await responseGet.json();
+            
+            let historico = [];
+            if (dataGet.result) {
+                historico = JSON.parse(dataGet.result);
             }
 
-            // Adiciona o novo match e limita aos 5 últimos
+            // 2. Adicionar o novo e limitar a 5
             historico.unshift(novoMatch);
             historico = historico.slice(0, 5);
-            
-            // Salva no banco
-            await client.set('global_matches', JSON.stringify(historico));
-            
+
+            // 3. Salvar de volta no Redis
+            await fetch(`${REDIS_REST_URL}/set/global_matches`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${REDIS_REST_TOKEN}` },
+                body: JSON.stringify(historico)
+            });
+
             return res.status(200).json({ success: true });
-        } 
+        }
 
+        // --- MÉTODO GET: LER ÚLTIMOS MATCHES ---
         if (req.method === 'GET') {
-            const data = await client.get('global_matches');
+            const response = await fetch(`${REDIS_REST_URL}/get/global_matches`, {
+                headers: { Authorization: `Bearer ${REDIS_REST_TOKEN}` }
+            });
+            const data = await response.json();
             
-            let historico = [];
-            if (data) {
-                historico = typeof data === 'string' ? JSON.parse(data) : data;
-            }
-
-            // Retorna os 3 primeiros para o slide
+            const historico = data.result ? JSON.parse(data.result) : [];
+            
+            // Retorna os 3 primeiros para o slide da Home
             return res.status(200).json(historico.slice(0, 3));
         }
+
     } catch (error) {
-        console.error("Erro no Redis:", error);
-        // Retornamos um array vazio em vez de erro 500 para o site não travar
+        console.error("Erro na API:", error);
+        // Em caso de qualquer erro, retornamos um array vazio para o site não travar
         return res.status(200).json([]);
     }
 }
