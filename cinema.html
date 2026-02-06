@@ -4,56 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineAdois - Partiu Telão!</title>
-    <style>
-        body { background-color: #121212; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { text-align: center; padding: 20px; }
-        .logo-small { max-width: 130px; }
-        .main-content { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
-        .setup-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; margin-bottom: 20px; text-align: center; }
-        h2 { color: #f1c40f; font-size: 1.3rem; margin-top: 0; margin-bottom: 15px; }
-        
-        select { width: 100%; padding: 14px; background-color: #2c2c2c; border: 1px solid #444; border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none; cursor: pointer; }
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f1c40f">
 
-        .cidade-selecionada { font-size: 1.5rem; font-weight: bold; color: #fff; margin-bottom: 20px; display: block; }
+    <style>
+        /* --- Padronização CineAdois --- */
+        body { 
+            background-color: #121212; 
+            color: #fff; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+
+        header { text-align: center; padding: 30px 20px; }
+        .logo-small { max-width: 180px; transition: transform 0.3s ease; }
+
+        .main-content { width: 100%; max-width: 600px; padding: 0 20px 40px; box-sizing: border-box; }
+
+        /* --- Textos de Introdução --- */
+        .page-title { color: #f1c40f; text-transform: uppercase; letter-spacing: 2px; font-size: 1.8rem; text-align: center; margin-bottom: 10px; }
+        .page-intro { text-align: center; color: #ccc; font-size: 1rem; line-height: 1.6; margin-bottom: 30px; padding: 0 10px; }
+        .page-intro b { color: #f1c40f; }
+
+        /* --- Box de Seleção --- */
+        .setup-box { 
+            background: linear-gradient(180deg, rgba(241,196,15,0.05) 0%, rgba(30,30,30,1) 100%);
+            border: 1px solid rgba(241,196,15,0.2);
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 20px; 
+            text-align: center; 
+        }
+
+        h2 { color: #f1c40f; font-size: 1.2rem; margin-top: 0; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
         
-        .btn-principal { width: 100%; padding: 15px; background-color: #f1c40f; border: none; border-radius: 8px; color: #000; font-weight: bold; cursor: pointer; font-size: 1rem; margin-bottom: 10px; transition: 0.3s; }
-        .btn-principal:hover { background-color: #d4ac0d; }
+        select { 
+            width: 100%; padding: 16px; background-color: rgba(255,255,255,0.05); 
+            border: 1px solid #444; border-radius: 12px; color: #fff; 
+            margin-bottom: 15px; outline: none; cursor: pointer; font-size: 1rem;
+            appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23f1c40f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 15px center;
+        }
+
+        .cidade-selecionada { font-size: 1.8rem; font-weight: 800; color: #fff; margin: 10px 0 20px; display: block; }
         
-        .btn-trocar { background: transparent; border: 1px dashed #555; color: #888; padding: 10px; width: 100%; cursor: pointer; border-radius: 8px; font-size: 0.85rem; }
+        .btn-principal { 
+            width: 100%; padding: 18px; background-color: #f1c40f; border: none; 
+            border-radius: 50px; color: #121212; font-weight: 900; cursor: pointer; 
+            font-size: 1.1rem; text-transform: uppercase; transition: 0.3s; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); margin-bottom: 15px;
+        }
+        .btn-principal:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(241, 196, 15, 0.4); }
         
-        .loading { display: none; text-align: center; margin: 20px 0; color: #f1c40f; }
-        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(241, 196, 15, 0.3); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s ease-in-out infinite; margin-bottom: 10px; }
+        .btn-trocar { 
+            background: transparent; border: 1px dashed #555; color: #888; 
+            padding: 12px; width: 100%; cursor: pointer; border-radius: 50px; 
+            font-size: 0.85rem; transition: 0.3s;
+        }
+        .btn-trocar:hover { border-color: #f1c40f; color: #f1c40f; }
+        
+        /* --- Loading --- */
+        .loading { display: none; text-align: center; margin: 30px 0; color: #f1c40f; font-style: italic; }
+        .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid rgba(241, 196, 15, 0.1); border-radius: 50%; border-top-color: #f1c40f; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .list-container { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-        .item-clicavel { background: #262626; padding: 15px; border-radius: 8px; border-left: 4px solid #f1c40f; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; text-align: left; }
-        .item-clicavel:hover { background: #333; transform: translateX(5px); }
-        .back-link { display: block; text-align: center; margin-top: 25px; color: #bdc3c7; text-decoration: none; }
+        /* --- Lista de Resultados --- */
+        .list-container { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        .item-clicavel { 
+            background: rgba(255,255,255,0.05); padding: 18px; border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.1); border-left: 6px solid #f1c40f; 
+            cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; 
+            align-items: center; text-align: left; 
+        }
+        .item-clicavel:hover { 
+            background: rgba(241,196,15,0.1); transform: scale(1.02); 
+            border-color: rgba(241,196,15,0.3);
+        }
+        .item-clicavel span:last-child { 
+            font-size: 0.8rem; font-weight: bold; text-transform: uppercase; 
+            background: #f1c40f; color: #121212; padding: 5px 12px; border-radius: 20px;
+        }
+
+        .back-link { display: block; text-align: center; margin-top: 30px; color: #666; text-decoration: none; font-weight: 500; }
+        .back-link:hover { color: #f1c40f; }
+        
+        footer { padding: 40px; color: #444; font-size: 0.8rem; text-align: center; }
     </style>
 </head>
 <body>
     <header><a href="index.html"><img src="logo.png" alt="CineAdois" class="logo-small"></a></header>
+    
     <main class="main-content">
+        <h1 class="page-title">PARTIU TELÃO! 🎬</h1>
+        <p class="page-intro">
+            <b>O cheirinho de pipoca está no ar!</b><br>
+            Querem sair da rotina hoje? Confira os filmes que acabaram de chegar às telonas. 
+            Escolha o cinema que você quer ir na sua cidade que a gente te manda direto pra programação!
+        </p>
+
         <section class="setup-box">
             <h2>Onde vocês estão?</h2>
             <select id="estado" onchange="selecionarEstado()">
-                <option value="">Selecione o Estado</option>
+                <option value="">Selecione seu Estado</option>
                 <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option><option value="BA">Bahia</option><option value="CE">Ceará</option><option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option><option value="GO">Goiás</option><option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option><option value="MG">Minas Gerais</option><option value="PA">Pará</option><option value="PB">Paraíba</option><option value="PR">Paraná</option><option value="PE">Pernambuco</option><option value="PI">Piauí</option><option value="RJ">Rio de Janeiro</option><option value="RN">Rio Grande do Norte</option><option value="RS">Rio Grande do Sul</option><option value="RO">Rondônia</option><option value="RR">Roraima</option><option value="SC">Santa Catarina</option><option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
             </select>
 
             <div id="area-capital" style="display:none;">
                 <span class="cidade-selecionada" id="nome-cidade-atual">Cidade</span>
-                <button class="btn-principal" onclick="buscarCinemas(document.getElementById('nome-cidade-atual').innerText)">Procurar Cinema 🍿</button>
+                <button class="btn-principal" onclick="buscarCinemas(document.getElementById('nome-cidade-atual').innerText)">Procurar Cinemas 🍿</button>
                 <button class="btn-trocar" onclick="trocarCidade()">Não estou na capital 📍</button>
             </div>
 
-            <div id="load-geral" class="loading"><div class="spinner"></div><br><span id="msg-load">Consultando...</span></div>
+            <div id="load-geral" class="loading">
+                <div class="spinner"></div><br>
+                <span id="msg-load">Consultando o Oráculo...</span>
+            </div>
             
             <div id="container-resultados" class="list-container"></div>
         </section>
 
         <a href="index.html" class="back-link">← Voltar para o início</a>
     </main>
+
+    <footer>&copy; 2026 CineAdois - Nos vemos na primeira fila.</footer>
 
     <script src="api/cinema.js"></script>
     <script>
@@ -92,7 +170,7 @@
                 cidades.forEach(c => {
                     const div = document.createElement('div');
                     div.className = 'item-clicavel';
-                    div.innerHTML = `<span>${c}</span><span style="color:#f1c40f">→</span>`;
+                    div.innerHTML = `<span>${c}</span><span>Selecionar</span>`;
                     div.onclick = () => {
                         document.getElementById('nome-cidade-atual').innerText = c;
                         document.getElementById('area-capital').style.display = 'block';
@@ -116,14 +194,14 @@
                 load.style.display = 'none';
 
                 if (!cinemas || cinemas.length === 0) {
-                    resultados.innerHTML = "<p>Nenhum cinema encontrado.</p>";
+                    resultados.innerHTML = "<p style='color:#888; padding:20px;'>Nenhum cinema encontrado nesta região.</p>";
                     return;
                 }
 
                 cinemas.forEach(nome => {
                     const div = document.createElement('div');
                     div.className = 'item-clicavel';
-                    div.innerHTML = `<span>${nome}</span><span style="color:#f1c40f">Ver Horários</span>`;
+                    div.innerHTML = `<span>${nome}</span><span>Ver Horários</span>`;
                     const q = encodeURIComponent(`programação cinema ${nome} ${cidade} ${estadoGlobal}`);
                     div.onclick = () => window.open(`https://www.google.com/search?q=${q}`, '_blank');
                     resultados.appendChild(div);
