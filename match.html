@@ -137,6 +137,7 @@
             document.getElementById('modo-cada-um').style.display = modoAtual === 'cada-um' ? 'block' : 'none';
         }
 
+        // --- FUNÇÃO DE SALVAMENTO NO MURAL ---
         async function salvarMatchNoGlobal(buscaTexto, filmesEncontrados) {
             try {
                 await fetch('/api/historico', {
@@ -144,9 +145,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         busca: buscaTexto,
-                        filmes: filmesEncontrados.slice(0, 3)
+                        filmes: filmesEncontrados.slice(0, 3) // Salva os 3 principais
                     })
                 });
+                console.log("Match sincronizado com o mural global!");
             } catch (e) { console.error("Erro ao salvar no global", e); }
         }
 
@@ -164,7 +166,7 @@
                 expectativa = `P1: ${p1}. P2: ${p2}`;
                 resumoBusca = (p1 && p2) ? `${p1} + ${p2}` : (p1 || p2 || genStr);
             } else {
-                resumoBusca = genStr;
+                resumoBusca = genStr || "Clima surpresa";
             }
 
             if(generosSelecionados.length === 0 && !expectativa) return alert("Escolha um gênero ou escreva o que buscam!");
@@ -176,9 +178,11 @@
             if(acumular) btnMais.style.display = 'none';
 
             try {
+                // Aqui chama a sua lógica do api/match.js
                 const novosFilmes = await MatchIA.gerarSugestoes(genStr, expectativa, filmesJaMostrados);
                 
-                if (!acumular && novosFilmes.length > 0) {
+                // GRAVAÇÃO NO MURAL: Só grava na primeira busca (não no 'ver mais')
+                if (!acumular && novosFilmes && novosFilmes.length > 0) {
                     await salvarMatchNoGlobal(resumoBusca, novosFilmes.map(f => f.titulo_pt));
                 }
 
